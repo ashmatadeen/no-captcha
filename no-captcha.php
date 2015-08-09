@@ -44,7 +44,9 @@ function wr_no_captcha_options_page() {
 											do_settings_sections( 'recaptcha-options' );
 											submit_button();
 										?>
+									</form>
 
+                                    <form method="post" action="options.php">
 										<?php
 											settings_fields( 'messages_section' );
 											do_settings_sections( 'recaptcha-text-options' );
