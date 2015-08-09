@@ -1,10 +1,10 @@
 <noscript>
-  <div style="width: 302px; height: 422px;">
-    <div style="width: 302px; height: 422px; position: relative;">
-      <div style="width: 302px; height: 422px; position: absolute;">
+  <div style="width: 302px; height: 425px; margin-bottom: 20px; margin-left: -15px;">
+    <div style="width: 302px; height: 425px; position: relative;">
+      <div style="width: 302px; height: 425px; position: absolute;">
         <iframe src="https://www.google.com/recaptcha/api/fallback?k=<?php echo get_option( 'wr_no_captcha_site_key' ); ?>"
                 frameborder="0" scrolling="no"
-                style="width: 302px; height:422px; border-style: none;">
+                style="width: 302px; height:425px; border-style: none;">
         </iframe>
       </div>
       <div style="width: 300px; height: 60px; border-style: none;
