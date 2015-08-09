@@ -148,7 +148,7 @@ function wr_no_captcha_login_form_script() {
 }
 
 function wr_no_captcha_render_login_captcha() {
-	if ( get_option( 'wr_no_captcha_secret_key' ) && get_option( 'wr_no_captcha_site_key' ) ) {
+	if ( wr_no_captcha_api_keys_set() ) {
 		echo '<div class="g-recaptcha" data-sitekey="' . get_option( 'wr_no_captcha_site_key' ) . '"></div>';
 		require_once( plugin_dir_path( __FILE__ ) . 'noscript/noscript.php');
 	}
@@ -164,6 +164,8 @@ function wr_no_captcha_verify_login_captcha($user, $password) {
 		} else {
 			return new WP_Error( 'Captcha Invalid',  wr_no_captcha_get_error_message() );
 		}
+	} else if ( ! wr_no_captcha_api_keys_set() ) {
+		return $user;
 	}
 }
 
@@ -178,5 +180,13 @@ function wr_no_captcha_get_error_message() {
 		return __( $custom_error );
 	} else {
 		return __( '<strong>Robot test error</strong>: I suggest a new strategy, R2, let the Wookie win.' );
+	}
+}
+
+function wr_no_captcha_api_keys_set() {
+	if ( get_option( 'wr_no_captcha_secret_key' ) && get_option( 'wr_no_captcha_site_key' ) ) {
+		return true;
+	} else {
+		return false;
 	}
 }
