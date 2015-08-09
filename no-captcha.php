@@ -44,6 +44,12 @@ function wr_no_captcha_options_page() {
 											do_settings_sections( 'recaptcha-options' );
 											submit_button();
 										?>
+
+										<?php
+											settings_fields( 'messages_section' );
+											do_settings_sections( 'recaptcha-text-options' );
+											submit_button();
+										?>
 									</form>
 								</div>
 
@@ -91,16 +97,26 @@ function wr_no_captcha_options_page() {
 }
 
 function wr_no_captcha_display_options() {
-	add_settings_section( 'keys_section', 'API Credentials', 'wr_no_captcha_display_recaptcha_content', 'recaptcha-options' );
-
+	add_settings_section( 'keys_section', 'API Credentials', 'wr_no_captcha_display_recaptcha_api_content', 'recaptcha-options' );
 	add_settings_field( 'wr_no_captcha_site_key', 'Site key', 'wr_no_captcha_key_input', 'recaptcha-options', 'keys_section' );
 	add_settings_field( 'wr_no_captcha_secret_key', 'Secret Key', 'wr_no_captcha_secret_key_input', 'recaptcha-options', 'keys_section' );
-
 	register_setting( 'keys_section', 'wr_no_captcha_site_key' );
 	register_setting( 'keys_section', 'wr_no_captcha_secret_key' );
+
+	add_settings_section( 'messages_section', 'Custom error message', 'wr_no_captcha_display_recaptcha_error_message_content', 'recaptcha-text-options' );
+	add_settings_field( 'wr_no_captcha_error_message_text', 'Custom error message text', 'wr_no_captcha_error_message_input', 'recaptcha-text-options', 'messages_section' );
+	register_setting( 'messages_section', 'wr_no_captcha_error_message_text' );
 }
 
-function wr_no_captcha_display_recaptcha_content() {
+function wr_no_captcha_display_recaptcha_error_message_content() {
+	echo "<p>You can set your own error message here for when the bot test fails:</p>";
+}
+
+function wr_no_captcha_error_message_input() {
+	echo '<input size="60" type="text" name="wr_no_captcha_error_message_text" id="wr_no_captcha_error_message_text" value="'. get_option( 'wr_no_captcha_error_message_text' ) . '" />';
+}
+
+function wr_no_captcha_display_recaptcha_api_content() {
 	echo '<p>Please <a href="https://www.google.com/recaptcha/admin">register you domain</a> with Google to obtain the API keys and enter them below.</p>';
 }
 
@@ -130,7 +146,7 @@ function wr_no_captcha_verify_login_captcha($user, $password) {
 		if ( true === $response['success'] ) {
 			return $user;
 		} else {
-			return new WP_Error( 'Captcha Invalid', __( '<strong>Robot test error</strong>: I suggest a new strategy, R2, let the Wookie win.' ) );
+			return new WP_Error( 'Captcha Invalid',  wr_no_captcha_get_error_message() );
 		}
 	}
 }
@@ -138,4 +154,13 @@ function wr_no_captcha_verify_login_captcha($user, $password) {
 function wr_no_captcha_css() {
 	$src = plugins_url( 'css/no-captcha.css', __FILE__ );
 	wp_enqueue_style( 'no_captcha_css',  $src );
+}
+
+function wr_no_captcha_get_error_message() {
+	$custom_error = get_option( 'wr_no_captcha_error_message_text' );
+	if ( $custom_error ) {
+		return __( $custom_error );
+	} else {
+		return __( '<strong>Robot test error</strong>: I suggest a new strategy, R2, let the Wookie win.' );
+	}
 }
