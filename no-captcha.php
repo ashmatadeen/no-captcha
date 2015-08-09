@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Google noCAPTCHA reCAPTCHA for WordPress
+ * Plugin Name: reCAPTCHA
  * Plugin URI: http://ashmatadeen.com
  * Description: Adds Google's reCAPTCHA to WP's login form
  * Author: Ash Matadeen
