@@ -5,12 +5,13 @@
  * Description: Adds Google's reCAPTCHA to WP's login form
  * Author: Ash Matadeen
  * Author URI: http://ashmatadeen.com
- * Version: 1.0
+ * Version: 1.1
  */
 
 add_action( 'admin_menu', 'wr_no_captcha_menu' );
 add_action( 'admin_init', 'wr_no_captcha_display_options' );
 add_action( 'login_enqueue_scripts', 'wr_no_captcha_login_form_script' );
+add_action( 'login_enqueue_scripts', 'wr_no_captcha_css' );
 add_action( 'login_form', 'wr_no_captcha_render_login_captcha' );
 add_filter( 'wp_authenticate_user', 'wr_no_captcha_verify_login_captcha', 10, 2 );
 
@@ -134,3 +135,7 @@ function wr_no_captcha_verify_login_captcha($user, $password) {
 	}
 }
 
+function wr_no_captcha_css() {
+	$src = plugins_url( 'css/no-captcha.css', __FILE__ );
+	wp_enqueue_style( 'no_captcha_css',  $src );
+}
