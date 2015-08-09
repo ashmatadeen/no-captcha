@@ -118,6 +118,7 @@ function wr_no_captcha_login_form_script() {
 
 function wr_no_captcha_render_login_captcha() {
 	echo '<div class="g-recaptcha" data-sitekey="' . get_option( 'wr_no_captcha_site_key' ) . '"></div>';
+	require_once( plugin_dir_path( __FILE__ ) . 'noscript/noscript.php');
 }
 
 function wr_no_captcha_verify_login_captcha($user, $password) {
