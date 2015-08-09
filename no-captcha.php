@@ -5,7 +5,7 @@
  * Description: Adds Google's reCAPTCHA to WP's login form
  * Author: Ash Matadeen
  * Author URI: http://ashmatadeen.com
- * Version: 1.2
+ * Version: 1.3
  */
 
 add_action( 'admin_menu', 'wr_no_captcha_menu' );
@@ -69,10 +69,22 @@ function wr_no_captcha_options_page() {
 
 							<div class="postbox">
 
-								<h3>Lorem ipsum</h3>
+								<h3>Support this plugin</h3>
 
 								<div class="inside">
-									<p>Lorem ipsum dolor sit amet</p>
+									<p>Click the donate button below to donate an amount of your choice to support the development of this plugin. All donations go straight to the plugin developer.</p>
+									<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+										<input type="hidden" name="cmd" value="_donations">
+										<input type="hidden" name="business" value="ash@webblerock.com">
+										<input type="hidden" name="lc" value="GB">
+										<input type="hidden" name="item_name" value="Ash Matadeen">
+										<input type="hidden" name="item_number" value="no-captcha">
+										<input type="hidden" name="no_note" value="0">
+										<input type="hidden" name="currency_code" value="GBP">
+										<input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHostedGuest">
+										<input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online.">
+										<img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+									</form>
 								</div>
 								<!-- .inside -->
 
