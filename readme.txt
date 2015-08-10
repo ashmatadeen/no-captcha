@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: ash.matadeen
-Donate link: ash@webblerock.com
+Donate link: http://ashmatadeen.com/donate
 Tags: security, bots, recaptcha, nocaptcha, google, login
 Requires at least: 4.2.2
 Tested up to: 4.2.4
@@ -10,10 +10,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Prevent brute force logins on your WordPress site with Google's reCAPTCHA.
 
-https://www.google.com/recaptcha/
 
 == Description ==
-This plugin prevents brute force logins on your WordPress website by adding Google's easy to use reCAPTCHA to the login form.
+This plugin prevents brute force logins on your WordPress website by adding Google's easy to use (reCAPTCHA)[https://www.google.com/recaptcha/] to the login form.
 
 
 == Installation ==
