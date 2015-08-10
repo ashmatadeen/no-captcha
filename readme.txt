@@ -12,7 +12,7 @@ Prevent brute force logins on your WordPress site with Google's reCAPTCHA.
 
 
 == Description ==
-This plugin prevents brute force logins on your WordPress website by adding Google's easy to use (reCAPTCHA)[https://www.google.com/recaptcha/] to the login form.
+This plugin prevents brute force logins on your WordPress website by adding Google's easy to use [reCAPTCHA](https://www.google.com/recaptcha/) to the login form.
 
 
 == Installation ==
