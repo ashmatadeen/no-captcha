@@ -5,7 +5,7 @@
  * Description: Adds Google's reCAPTCHA to WP's login form
  * Author: Ash Matadeen
  * Author URI: http://ashmatadeen.com
- * Version: 1.3
+ * Version: 1.4
  */
 
 add_action( 'admin_menu', 'wr_no_captcha_menu' );
