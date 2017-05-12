@@ -62,6 +62,14 @@ function wr_no_captcha_options_page() {
 											submit_button();
 										?>
 									</form>
+																	
+									<form method="post" action="options.php">
+										<?php
+											settings_fields( 'exlude_ips_section' );
+											do_settings_sections( 'recaptcha-exlude_ips-options' );
+											submit_button();
+										?>
+									</form>
 								</div>
 
 							</div>
@@ -129,14 +137,26 @@ function wr_no_captcha_display_options() {
 	add_settings_section( 'messages_section', 'Custom error message', 'wr_no_captcha_display_recaptcha_error_message_content', 'recaptcha-text-options' );
 	add_settings_field( 'wr_no_captcha_error_message_text', 'Custom error message text', 'wr_no_captcha_error_message_input', 'recaptcha-text-options', 'messages_section' );
 	register_setting( 'messages_section', 'wr_no_captcha_error_message_text' );
+		
+	add_settings_section( 'exlude_ips_section', 'Exclude IP addresses', 'wr_no_captcha_display_recaptcha_exlude_ips_content', 'recaptcha-exlude_ips-options' );
+	add_settings_field( 'wr_no_captcha_exlude_ips', 'Exclude IP addresses', 'wr_no_captcha_exlude_ips_input', 'recaptcha-exlude_ips-options', 'exlude_ips_section' );
+	register_setting( 'exlude_ips_section', 'wr_no_captcha_exlude_ips' );
 }
 
 function wr_no_captcha_display_recaptcha_error_message_content() {
 	echo "<p>You can set your own error message here for when the bot test fails:</p>";
 }
 
+function wr_no_captcha_display_recaptcha_exlude_ips_content() {
+	echo "<p>You can exclude single IP addresses (separated by comma) entered here from displaying the captcha:</p>";
+}
+
 function wr_no_captcha_error_message_input() {
 	echo '<input size="60" type="text" name="wr_no_captcha_error_message_text" id="wr_no_captcha_error_message_text" value="'. get_option( 'wr_no_captcha_error_message_text' ) . '" />';
+}
+
+function wr_no_captcha_exlude_ips_input() {
+	echo '<input size="60" type="text" name="wr_no_captcha_exlude_ips" id="wr_no_captcha_exlude_ips" value="'. get_option( 'wr_no_captcha_exlude_ips' ) . '" />';
 }
 
 function wr_no_captcha_display_recaptcha_api_content() {
@@ -152,12 +172,14 @@ function wr_no_captcha_secret_key_input() {
 }
 
 function wr_no_captcha_login_form_script() {
-	wp_register_script( 'no_captcha_login', 'https://www.google.com/recaptcha/api.js' );
-	wp_enqueue_script( 'no_captcha_login' );
+	if ( ! wr_no_captcha_is_ip_excluded() ) {
+		wp_register_script( 'no_captcha_login', 'https://www.google.com/recaptcha/api.js' );
+		wp_enqueue_script( 'no_captcha_login' );
+	}
 }
 
 function wr_no_captcha_render_login_captcha() {
-	if ( wr_no_captcha_api_keys_set() ) {
+	if ( wr_no_captcha_api_keys_set() && ! wr_no_captcha_is_ip_excluded() ) {
 		echo '<div class="g-recaptcha" data-sitekey="' . get_option( 'wr_no_captcha_site_key' ) . '"></div>';
 		require_once( plugin_dir_path( __FILE__ ) . 'noscript/noscript.php');
 	}
@@ -173,7 +195,7 @@ function wr_no_captcha_verify_login_captcha($user, $password) {
 		} else {
 			return new WP_Error( 'Captcha Invalid',  wr_no_captcha_get_error_message() );
 		}
-	} else if ( ! wr_no_captcha_api_keys_set() ) {
+	} else if ( ! wr_no_captcha_api_keys_set() || wr_no_captcha_is_ip_excluded() ) {
 		return $user;
 	}
 }
@@ -197,5 +219,41 @@ function wr_no_captcha_api_keys_set() {
 		return true;
 	} else {
 		return false;
+	}
+}
+
+function wr_no_captcha_get_exlude_ips() {
+	$exlude_ips = get_option( 'wr_no_captcha_exlude_ips' );
+	if ( $exlude_ips ) {
+		return array_map('trim', explode(',', $exlude_ips));
+	} else {
+		return array();
+	}
+}
+
+function wr_no_captcha_get_client_ip() {
+	$ipaddress = '';
+	if (isset($_SERVER['HTTP_CLIENT_IP']))
+		$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+	else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+		$ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	else if(isset($_SERVER['HTTP_X_FORWARDED']))
+		$ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+	else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+		$ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+	else if(isset($_SERVER['HTTP_FORWARDED']))
+		$ipaddress = $_SERVER['HTTP_FORWARDED'];
+	else if(isset($_SERVER['REMOTE_ADDR']))
+		$ipaddress = $_SERVER['REMOTE_ADDR'];
+	else
+		$ipaddress = 'UNKNOWN';
+	return $ipaddress;
+}
+
+function wr_no_captcha_is_ip_excluded() {
+	if(wr_no_captcha_get_client_ip() === 'UNKNOWN' ) {
+		return false;
+	} else {
+		return in_array(wr_no_captcha_get_client_ip(), wr_no_captcha_get_exlude_ips());
 	}
 }
