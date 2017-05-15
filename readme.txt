@@ -3,7 +3,7 @@ Contributors: ash.matadeen
 Donate link: http://ashmatadeen.com/donate
 Tags: security, bots, recaptcha, nocaptcha, google, login
 Requires at least: 4.2.2
-Tested up to: 4.6.1
+Tested up to: 4.7.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -30,6 +30,9 @@ This plugin prevents brute force logins on your WordPress website by adding Goog
 2. reCAPTCHA admin settings screen
 
 == Changelog ==
+
+= 1.5 =
+* Support for bypassing the captcha for specific IP addresses. Props to [Daniel Mann](https://github.com/dnlm)
 
 = 1.4.1 =
 * Support for WooCommerce's login form

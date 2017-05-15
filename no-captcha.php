@@ -3,9 +3,11 @@
  * Plugin Name: reCAPTCHA
  * Plugin URI: http://ashmatadeen.com
  * Description: Adds Google's reCAPTCHA to WP's login form
+ *
+ * @package login-form-recaptcha
  * Author: Ash Matadeen
  * Author URI: http://ashmatadeen.com
- * Version: 1.4.1
+ * Version: 1.5
  */
 
 add_action( 'admin_menu', 'wr_no_captcha_menu' );
@@ -15,9 +17,8 @@ add_action( 'login_enqueue_scripts', 'wr_no_captcha_css' );
 add_action( 'login_form', 'wr_no_captcha_render_login_captcha' );
 add_filter( 'wp_authenticate_user', 'wr_no_captcha_verify_login_captcha', 10, 2 );
 
-// Specific support for WooCommerce login form
-// Using WooCommerce specific hooks because 
-// WooCommerce's login form does not use the expected wp_login_form()
+// Specific support for WooCommerce login form!
+// Using WooCommerce specific hooks because WooCommerce's login form does not use the expected wp_login_form().
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 	add_action( 'woocommerce_login_form', 'wr_no_captcha_render_login_captcha' );
 	add_action( 'wp_enqueue_scripts', 'wr_no_captcha_login_form_script' );
@@ -55,7 +56,7 @@ function wr_no_captcha_options_page() {
 										?>
 									</form>
 
-                                    <form method="post" action="options.php">
+									<form method="post" action="options.php">
 										<?php
 											settings_fields( 'messages_section' );
 											do_settings_sections( 'recaptcha-text-options' );
@@ -137,26 +138,26 @@ function wr_no_captcha_display_options() {
 	add_settings_section( 'messages_section', 'Custom error message', 'wr_no_captcha_display_recaptcha_error_message_content', 'recaptcha-text-options' );
 	add_settings_field( 'wr_no_captcha_error_message_text', 'Custom error message text', 'wr_no_captcha_error_message_input', 'recaptcha-text-options', 'messages_section' );
 	register_setting( 'messages_section', 'wr_no_captcha_error_message_text' );
-		
+
 	add_settings_section( 'exlude_ips_section', 'Exclude IP addresses', 'wr_no_captcha_display_recaptcha_exlude_ips_content', 'recaptcha-exlude_ips-options' );
 	add_settings_field( 'wr_no_captcha_exlude_ips', 'Exclude IP addresses', 'wr_no_captcha_exlude_ips_input', 'recaptcha-exlude_ips-options', 'exlude_ips_section' );
 	register_setting( 'exlude_ips_section', 'wr_no_captcha_exlude_ips' );
 }
 
 function wr_no_captcha_display_recaptcha_error_message_content() {
-	echo "<p>You can set your own error message here for when the bot test fails:</p>";
+	echo '<p>You can set your own error message here for when the bot test fails:</p>';
 }
 
 function wr_no_captcha_display_recaptcha_exlude_ips_content() {
-	echo "<p>You can exclude specific IP addresses (separated by comma) from displaying the captcha:</p>";
+	echo '<p>You can exclude specific IP addresses (separated by comma) from displaying the captcha:</p>';
 }
 
 function wr_no_captcha_error_message_input() {
-	echo '<input size="60" type="text" name="wr_no_captcha_error_message_text" id="wr_no_captcha_error_message_text" value="'. get_option( 'wr_no_captcha_error_message_text' ) . '" />';
+	echo '<input size="60" type="text" name="wr_no_captcha_error_message_text" id="wr_no_captcha_error_message_text" value="' . get_option( 'wr_no_captcha_error_message_text' ) . '" />';
 }
 
 function wr_no_captcha_exlude_ips_input() {
-	echo '<input size="60" type="text" name="wr_no_captcha_exlude_ips" id="wr_no_captcha_exlude_ips" value="'. get_option( 'wr_no_captcha_exlude_ips' ) . '" />';
+	echo '<input size="60" type="text" name="wr_no_captcha_exlude_ips" id="wr_no_captcha_exlude_ips" value="' . get_option( 'wr_no_captcha_exlude_ips' ) . '" />';
 }
 
 function wr_no_captcha_display_recaptcha_api_content() {
@@ -164,7 +165,7 @@ function wr_no_captcha_display_recaptcha_api_content() {
 }
 
 function wr_no_captcha_key_input() {
-	echo '<input type="text" name="wr_no_captcha_site_key" id="captcha_site_key" value="'. get_option( 'wr_no_captcha_site_key' ) . '" />';
+	echo '<input type="text" name="wr_no_captcha_site_key" id="captcha_site_key" value="' . get_option( 'wr_no_captcha_site_key' ) . '" />';
 }
 
 function wr_no_captcha_secret_key_input() {
@@ -181,11 +182,11 @@ function wr_no_captcha_login_form_script() {
 function wr_no_captcha_render_login_captcha() {
 	if ( wr_no_captcha_api_keys_set() && ! wr_no_captcha_is_ip_excluded() ) {
 		echo '<div class="g-recaptcha" data-sitekey="' . get_option( 'wr_no_captcha_site_key' ) . '"></div>';
-		require_once( plugin_dir_path( __FILE__ ) . 'noscript/noscript.php');
+		require_once( plugin_dir_path( __FILE__ ) . 'noscript/noscript.php' );
 	}
 }
 
-function wr_no_captcha_verify_login_captcha($user, $password) {
+function wr_no_captcha_verify_login_captcha( $user, $password ) {
 	if ( isset( $_POST['g-recaptcha-response'] ) ) {
 		$no_captcha_secret = get_option( 'wr_no_captcha_secret_key' );
 		$response = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $no_captcha_secret . '&response=' . $_POST['g-recaptcha-response'] );
@@ -195,7 +196,7 @@ function wr_no_captcha_verify_login_captcha($user, $password) {
 		} else {
 			return new WP_Error( 'Captcha Invalid',  wr_no_captcha_get_error_message() );
 		}
-	} else if ( ! wr_no_captcha_api_keys_set() || wr_no_captcha_is_ip_excluded() ) {
+	} elseif ( ! wr_no_captcha_api_keys_set() || wr_no_captcha_is_ip_excluded() ) {
 		return $user;
 	}
 }
@@ -208,7 +209,7 @@ function wr_no_captcha_css() {
 function wr_no_captcha_get_error_message() {
 	$custom_error = get_option( 'wr_no_captcha_error_message_text' );
 	if ( $custom_error ) {
-		return __( $custom_error );
+		return $custom_error;
 	} else {
 		return __( '<strong>Robot test error</strong>: I suggest a new strategy, R2, let the Wookie win.' );
 	}
@@ -225,7 +226,7 @@ function wr_no_captcha_api_keys_set() {
 function wr_no_captcha_get_exlude_ips() {
 	$exlude_ips = get_option( 'wr_no_captcha_exlude_ips' );
 	if ( $exlude_ips ) {
-		return array_map('trim', explode(',', $exlude_ips));
+		return array_map( 'trim', explode( ',', $exlude_ips ) );
 	} else {
 		return array();
 	}
@@ -233,19 +234,20 @@ function wr_no_captcha_get_exlude_ips() {
 
 function wr_no_captcha_get_client_ip() {
 	$ipaddress = '';
-	if (isset($_SERVER['HTTP_CLIENT_IP']))
+	if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 		$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-	else if(isset($_SERVER['REMOTE_ADDR']))
+	} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ipaddress = $_SERVER['REMOTE_ADDR'];
-	else
+	} else {
 		$ipaddress = 'UNKNOWN';
+	}
 	return $ipaddress;
 }
 
 function wr_no_captcha_is_ip_excluded() {
-	if(wr_no_captcha_get_client_ip() === 'UNKNOWN' ) {
+	if ( wr_no_captcha_get_client_ip() === 'UNKNOWN' ) {
 		return false;
 	} else {
-		return in_array(wr_no_captcha_get_client_ip(), wr_no_captcha_get_exlude_ips());
+		return in_array( wr_no_captcha_get_client_ip(), wr_no_captcha_get_exlude_ips() );
 	}
 }
