@@ -148,7 +148,7 @@ function wr_no_captcha_display_recaptcha_error_message_content() {
 }
 
 function wr_no_captcha_display_recaptcha_exlude_ips_content() {
-	echo "<p>You can exclude single IP addresses (separated by comma) entered here from displaying the captcha:</p>";
+	echo "<p>You can exclude specific IP addresses (separated by comma) from displaying the captcha:</p>";
 }
 
 function wr_no_captcha_error_message_input() {
