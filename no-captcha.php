@@ -141,7 +141,9 @@ function wr_no_captcha_display_options() {
 
 	add_settings_section( 'exlude_ips_section', 'Exclude IP addresses', 'wr_no_captcha_display_recaptcha_exlude_ips_content', 'recaptcha-exlude_ips-options' );
 	add_settings_field( 'wr_no_captcha_exlude_ips', 'Exclude IP addresses', 'wr_no_captcha_exlude_ips_input', 'recaptcha-exlude_ips-options', 'exlude_ips_section' );
+	add_settings_field( 'wr_no_captcha_exlude_ips_forwarded_for', 'Website is behind a proxy', 'wr_no_captcha_exlude_ips_forwarded_for_input', 'recaptcha-exlude_ips-options', 'exlude_ips_section' );
 	register_setting( 'exlude_ips_section', 'wr_no_captcha_exlude_ips' );
+	register_setting( 'exlude_ips_section', 'wr_no_captcha_exlude_ips_forwarded_for' );
 }
 
 function wr_no_captcha_display_recaptcha_error_message_content() {
@@ -170,6 +172,10 @@ function wr_no_captcha_key_input() {
 
 function wr_no_captcha_secret_key_input() {
 	echo '<input type="text" name="wr_no_captcha_secret_key" id="captcha_secret_key" value="' . get_option( 'wr_no_captcha_secret_key' ) . '" />';
+}
+
+function wr_no_captcha_exlude_ips_forwarded_for_input() {
+	echo '<input type="checkbox" id="wr_no_captcha_exlude_ips_forwarded_for" name="wr_no_captcha_exlude_ips_forwarded_for[checked]" value="1"' . checked( 1, get_option( 'wr_no_captcha_exlude_ips_forwarded_for' )['checked'], false ) . '/>';
 }
 
 function wr_no_captcha_login_form_script() {
@@ -238,6 +244,8 @@ function wr_no_captcha_get_client_ip() {
 		$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ipaddress = $_SERVER['REMOTE_ADDR'];
+	} elseif ( get_option( 'wr_no_captcha_exlude_ips_forwarded_for' )['checked'] === '1' && isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+		$ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
 	} else {
 		$ipaddress = 'UNKNOWN';
 	}
