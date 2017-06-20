@@ -63,7 +63,7 @@ function wr_no_captcha_options_page() {
 											submit_button();
 										?>
 									</form>
-																	
+
 									<form method="post" action="options.php">
 										<?php
 											settings_fields( 'exlude_ips_section' );
@@ -175,7 +175,7 @@ function wr_no_captcha_secret_key_input() {
 }
 
 function wr_no_captcha_exlude_ips_forwarded_for_input() {
-	echo '<input type="checkbox" id="wr_no_captcha_exlude_ips_forwarded_for" name="wr_no_captcha_exlude_ips_forwarded_for[checked]" value="1"' . checked( 1, get_option( 'wr_no_captcha_exlude_ips_forwarded_for' )['checked'], false ) . '/>';
+	echo '<input type="checkbox" id="wr_no_captcha_exlude_ips_forwarded_for" name="wr_no_captcha_exlude_ips_forwarded_for" value="1"' . checked( 1, get_option( 'wr_no_captcha_exlude_ips_forwarded_for' ), false ) . '/>';
 }
 
 function wr_no_captcha_login_form_script() {
@@ -244,7 +244,7 @@ function wr_no_captcha_get_client_ip() {
 		$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ipaddress = $_SERVER['REMOTE_ADDR'];
-	} elseif ( get_option( 'wr_no_captcha_exlude_ips_forwarded_for' )['checked'] === '1' && isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+	} elseif ( get_option( 'wr_no_captcha_exlude_ips_forwarded_for' ) === '1' && isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		$ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
 	} else {
 		$ipaddress = 'UNKNOWN';
