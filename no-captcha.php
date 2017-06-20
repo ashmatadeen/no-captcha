@@ -7,7 +7,7 @@
  * @package login-form-recaptcha
  * Author: Ash Matadeen
  * Author URI: http://ashmatadeen.com
- * Version: 1.5
+ * Version: 1.6
  */
 
 add_action( 'admin_menu', 'wr_no_captcha_menu' );
